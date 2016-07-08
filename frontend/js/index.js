@@ -96,7 +96,12 @@
     if (spriteRenderer) {
 
       spriteRenderer.draw(map, false);
+      var nextGrid = pacMan.nextGrid();
+      if (pacMan.offsetX === 0 && pacMan.offsetY === 0 && maze.grid[nextGrid.y][nextGrid.x] === -1) {
+        pacMan.setMovement(0, 0);
+      }
       pacMan.move();
+
       blinky.move();
       spriteRenderer.draw(pacMan.getDrawableSprite());
       spriteRenderer.draw(blinky.getDrawableSprite());

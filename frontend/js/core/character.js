@@ -36,20 +36,13 @@ PAC.Core.Character.prototype.getDrawableSprite = function () {
 PAC.Core.Character.prototype.setMovement = function (x, y) {
   this.movement.x = x;
   this.movement.y = y;
+  this.offsetX = 0;
+  this.offsetY = 0;
 };
 
 PAC.Core.Character.prototype.move = function () {
   this.offsetX += this.movement.x;
   this.offsetY += this.movement.y;
-
-  if (this.offsetX === 0
-      && this.offsetY === 0
-      && this.x === this.target.x
-      && this.y === this.target.y) {
-    this.setMovement(0, -1);
-    this.target.x = this.target.x;
-    this.target.y = 1;
-  }
 
   if (this.offsetX < -3) {
     this.x--;
@@ -67,6 +60,13 @@ PAC.Core.Character.prototype.move = function () {
     this.y++;
     this.offsetY = -3;
   }
+};
+
+PAC.Core.Character.prototype.nextGrid = function () {
+  return {
+    x : this.x + this.movement.x,
+    y : this.y + this.movement.y
+  };
 };
 
 PAC.Core.Character.prototype.copy = function () {
