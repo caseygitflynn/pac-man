@@ -26,46 +26,37 @@
     height : 248
   };
 
-  var pacMan = new PAC.Core.Character(26, 29, PAC.SPRITES.PAC_MAN.CLOSED);
-  pacMan.setMovement(0, 0);
-  pacMan.target = {
-    x : 1,
-    y : 29
-  };
+  var pacMan = new PAC.Core.Character(12, 12, PAC.SPRITES.PAC_MAN.CLOSED);
 
   window.addEventListener('keydown', function (e) {
     switch (e.keyCode) {
       case 38 :
         e.preventDefault();
-        pacMan.setMovement(0, -1);
+        pacMan.setMovement(PAC.UP);
         break;
       case 39 :
         e.preventDefault();
-        pacMan.setMovement(1, 0);
+        pacMan.setMovement(PAC.RIGHT);
         break;
       case 40 :
-        e.preventDefault(); 
-        pacMan.setMovement(0, 1);
+        e.preventDefault();
+        pacMan.setMovement(PAC.DOWN);
         break;
       case 37 :
         e.preventDefault();
-        pacMan.setMovement(-1, 0);
+        pacMan.setMovement(PAC.LEFT);
         break;
       default :
         break;
     }
   }, false);
 
-  var blinky = new PAC.Core.Character(13, 11, PAC.SPRITES.BLINKY.LEFT);
-  blinky.offsetX = 4;
-  blinky.setMovement(0, 0);
+  var blinky = new PAC.Core.Character(112, 92, PAC.SPRITES.BLINKY.LEFT);
+  blinky.setMovement(PAC.LEFT);
 
-  var inky = new PAC.Core.Character(11, 14, PAC.SPRITES.INKY.UP);
-  inky.offsetX = 4;
-  var pinky = new PAC.Core.Character(13, 14, PAC.SPRITES.PINKY.DOWN);
-  pinky.offsetX = 4;
-  var clyde = new PAC.Core.Character(15, 14, PAC.SPRITES.CLYDE.UP);
-  clyde.offsetX = 4;
+  var inky = new PAC.Core.Character(120, 120, PAC.SPRITES.INKY.UP);
+  var pinky = new PAC.Core.Character(120, 120, PAC.SPRITES.PINKY.DOWN);
+  var clyde = new PAC.Core.Character(120, 120, PAC.SPRITES.CLYDE.UP);
 
   spriteImage.src = "img/sprites.png";
 
@@ -97,12 +88,17 @@
 
       spriteRenderer.draw(map, false);
       var nextGrid = pacMan.nextGrid();
-      if (pacMan.offsetX === 0 && pacMan.offsetY === 0 && maze.grid[nextGrid.y][nextGrid.x] === -1) {
-        pacMan.setMovement(0, 0);
+      if (maze.grid[nextGrid.y][nextGrid.x] === -1) {
+        pacMan.setMovement(PAC.NONE);
       }
       pacMan.move();
-
+      
+      var nextGrid = blinky.nextGrid();
+      if (maze.grid[nextGrid.y][nextGrid.x] === -1) {
+        blinky.setMovement(PAC.NONE);
+      }
       blinky.move();
+
       spriteRenderer.draw(pacMan.getDrawableSprite());
       spriteRenderer.draw(blinky.getDrawableSprite());
       spriteRenderer.draw(inky.getDrawableSprite());
@@ -137,6 +133,14 @@
         }
       }
     }
+
+    ctx.save();
+    {
+      ctx.translate(pacMan.x, pacMan.y);
+      ctx.fillStyle = "#FF0000";
+      ctx.fillRect(0, 0, 1, 1);
+    }
+    ctx.restore();
   };
 
   loop();

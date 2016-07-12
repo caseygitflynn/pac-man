@@ -18,11 +18,14 @@ PAC.Maze.prototype.willCollide = function (characher) {
 };
 
 PAC.Maze.prototype.hasFood = function (x, y) {
-  if (this.grid[y][x] === 1) {
+  var gridPos = PAC.Utils.pointToGrid(x, y);
+
+  if (this.grid[gridPos.y][gridPos.x] === 1) {
     return true;
   }
 };
 
 PAC.Maze.prototype.eatFood = function (x, y) {
-  this.grid[y][x] = 0;
+  var gridPos = PAC.Utils.pointToGrid(x, y);
+  this.grid[gridPos.y][gridPos.x] = 0;
 };
