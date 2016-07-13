@@ -17,3 +17,10 @@ PAC.Utils.gridToPoint = function (x, y) {
     y : y * 8
   };
 };
+
+PAC.Utils.gridToCenterPoint = function (x, y) {
+  return {
+    x : x + 4,
+    y : y + 4
+  };
+};

@@ -17,6 +17,15 @@ PAC.Maze.prototype.willCollide = function (characher) {
   return false;
 };
 
+PAC.Maze.prototype.setCharacterDirections = function (characher) {
+  var gridPos = PAC.Utils.pointToGrid(characher.x, characher.y);
+
+  characher.directions[PAC.LEFT] = this.grid[gridPos.y][gridPos.x - 1];
+  characher.directions[PAC.RIGHT] = this.grid[gridPos.y][gridPos.x + 1];
+  characher.directions[PAC.UP] = this.grid[gridPos.y - 1][gridPos.x];
+  characher.directions[PAC.DOWN] = this.grid[gridPos.y + 1][gridPos.x];
+};
+
 PAC.Maze.prototype.hasFood = function (x, y) {
   var gridPos = PAC.Utils.pointToGrid(x, y);
 

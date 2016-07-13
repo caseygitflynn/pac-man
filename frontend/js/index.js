@@ -87,23 +87,23 @@
     if (spriteRenderer) {
 
       spriteRenderer.draw(map, false);
-      var nextGrid = pacMan.nextGrid();
-      if (maze.grid[nextGrid.y][nextGrid.x] === -1) {
+      if (pacMan.directions[pacMan.movement] === -1) {
         pacMan.setMovement(PAC.NONE);
       }
-      pacMan.move();
+      pacMan.update();
+      maze.setCharacterDirections(pacMan);
       
-      var nextGrid = blinky.nextGrid();
-      if (maze.grid[nextGrid.y][nextGrid.x] === -1) {
-        blinky.setMovement(PAC.NONE);
-      }
-      blinky.move();
+      // if (blinky.directions[blinky.movement] === -1) {
+      //   blinky.setMovement(PAC.NONE);
+      // }
+      // blinky.move();
+      // blinky.setDirections(maze.grid);
 
       spriteRenderer.draw(pacMan.getDrawableSprite());
-      spriteRenderer.draw(blinky.getDrawableSprite());
-      spriteRenderer.draw(inky.getDrawableSprite());
-      spriteRenderer.draw(pinky.getDrawableSprite());
-      spriteRenderer.draw(clyde.getDrawableSprite());
+      // spriteRenderer.draw(blinky.getDrawableSprite());
+      // spriteRenderer.draw(inky.getDrawableSprite());
+      // spriteRenderer.draw(pinky.getDrawableSprite());
+      // spriteRenderer.draw(clyde.getDrawableSprite());
 
       if (maze.hasFood(pacMan.x, pacMan.y)) {
         maze.eatFood(pacMan.x, pacMan.y);
