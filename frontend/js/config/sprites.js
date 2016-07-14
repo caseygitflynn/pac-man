@@ -3,6 +3,16 @@
 var PAC = PAC || {};
 
 PAC.SPRITES = {
+  MAP : {
+    x : 0,
+    y : 0,
+    offsetX : 0,
+    offsetY : 0,
+    clipX : 28.5,
+    clipY : 0,
+    width : 224,
+    height : 248
+  },
   PAC_MAN : {
     CLOSED : {
       clipX : 61,

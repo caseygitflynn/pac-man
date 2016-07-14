@@ -6,19 +6,8 @@ PAC.Maze = function () {
   this.grid = PAC.MAZE;
 };
 
-PAC.Maze.prototype.willCollide = function (character) {
-  var newX = character.x + character.movement.x;
-  var newY = character.y + character.movement.y;
-
-  if (this.grid[newY][newX] === -1) {
-    return true;
-  }
-
-  return false;
-};
-
 PAC.Maze.prototype.setCharacterDirections = function (character) {
-  var gridPos = PAC.Utils.pointToGrid(character.x, character.y);
+  var gridPos = PAC.Utils.pixelToTile(character.pixel);
 
   character.directions[PAC.LEFT] = this.grid[gridPos.y][gridPos.x - 1];
   character.directions[PAC.RIGHT] = this.grid[gridPos.y][gridPos.x + 1];
@@ -44,15 +33,14 @@ PAC.Maze.prototype.getValidDirection = function (character) {
   return character.movement;
 };
 
-PAC.Maze.prototype.hasFood = function (x, y) {
-  var gridPos = PAC.Utils.pointToGrid(x, y);
-
-  if (this.grid[gridPos.y][gridPos.x] === 1) {
+PAC.Maze.prototype.hasFood = function (tile) {
+  if (this.grid[tile.y][tile.x] === 1) {
     return true;
   }
+
+  return false;
 };
 
-PAC.Maze.prototype.eatFood = function (x, y) {
-  var gridPos = PAC.Utils.pointToGrid(x, y);
-  this.grid[gridPos.y][gridPos.x] = 0;
+PAC.Maze.prototype.eatFood = function (tile) {
+  this.grid[tile.y][tile.x] = 0;
 };

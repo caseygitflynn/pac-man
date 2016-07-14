@@ -8,59 +8,16 @@
 
   var spriteRenderer = null;
 
-  var spriteImage = new Image();
-  spriteImage.addEventListener('load', function () {
-    spriteRenderer = new PAC.Graphics.Sprites(spriteImage, ctx, 680, 248);
-  });
-
   var maze = new PAC.Maze();
 
-  var map = {
-    x : 0,
-    y : 0,
-    offsetX : 0,
-    offsetY : 0,
-    clipX : 28.5,
-    clipY : 0,
-    width : 224,
-    height : 248
-  };
-
-  var input = PAC.NONE;
-
+  var input = new PAC.Core.Input();
   var pacMan = new PAC.Core.Character(12, 12, PAC.SPRITES.PAC_MAN.CLOSED);
-
-  window.addEventListener('keydown', function (e) {
-    switch (e.keyCode) {
-      case 38 :
-        e.preventDefault();
-        input = PAC.UP;
-        break;
-      case 39 :
-        e.preventDefault();
-        input = PAC.RIGHT;
-        break;
-      case 40 :
-        e.preventDefault();
-        input = PAC.DOWN;
-        break;
-      case 37 :
-        e.preventDefault();
-        input = PAC.LEFT;
-        break;
-      default :
-        break;
-    }
-  }, false);
-
   var blinky = new PAC.Core.Character(112, 92, PAC.SPRITES.BLINKY.LEFT);
   blinky.setMovement(PAC.LEFT);
 
   var inky = new PAC.Core.Character(120, 120, PAC.SPRITES.INKY.UP);
   var pinky = new PAC.Core.Character(120, 120, PAC.SPRITES.PINKY.DOWN);
   var clyde = new PAC.Core.Character(120, 120, PAC.SPRITES.CLYDE.UP);
-
-  spriteImage.src = "img/sprites.png";
 
   var loop = function () {
     window.requestAnimationFrame(loop);
@@ -76,70 +33,42 @@
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    if (spriteRenderer) {
-
-      spriteRenderer.draw(map, false);
-      if (PAC.Utils.isAtGridOrigin(pacMan.x, pacMan.y)) {
-        if (pacMan.directions[pacMan.movement] === -1) {
-          pacMan.setMovement(PAC.NONE);
-        } else {
-          pacMan.setMovement(input);
-        }
-      }
-      pacMan.update();
-      maze.setCharacterDirections(pacMan);
-      
-      // if (PAC.Utils.isAtGridOrigin(blinky.x, blinky.y)) {
-      //   blinky.setMovement(maze.getValidDirection(blinky));
-      // }
-
-      // blinky.update();
-      // maze.setCharacterDirections(blinky);
-
-      spriteRenderer.draw(pacMan.getDrawableSprite());
-      // spriteRenderer.draw(blinky.getDrawableSprite());
-      // spriteRenderer.draw(inky.getDrawableSprite());
-      // spriteRenderer.draw(pinky.getDrawableSprite());
-      // spriteRenderer.draw(clyde.getDrawableSprite());
-
-      if (maze.hasFood(pacMan.x, pacMan.y)) {
-        maze.eatFood(pacMan.x, pacMan.y);
+    spriteRenderer.draw(PAC.SPRITES.MAP, false);
+    if (PAC.Utils.isAtGridOrigin(pacMan.pixel)) {
+      if (pacMan.directions[pacMan.direction] === -1) {
+        pacMan.setMovement(PAC.NONE);
+      } else {
+        pacMan.setMovement(input.currentInput);
       }
     }
+    pacMan.update();
+    maze.setCharacterDirections(pacMan);
+    
+    // if (PAC.Utils.isAtGridOrigin(blinky.x, blinky.y)) {
+    //   blinky.setMovement(maze.getValidDirection(blinky));
+    // }
 
-    for (var y = 0; y < maze.grid.length; y = y + 1) {
-      for (var x = 0; x < maze.grid[0].length; x = x + 1) {
-        if (maze.grid[y][x] === 1) {
-          ctx.save();
-          {
-            ctx.translate((8 * x) + 3, (8 * y) + 3);
-            ctx.fillStyle = "#fab9b0";
-            ctx.fillRect(0, 0, 2, 2);
-          }
-          ctx.restore();
-        } else if (maze.grid[y][x] === 2) {
-          ctx.save();
-          {
-            ctx.translate((8 * x), (8 * y));
-            ctx.beginPath();
-            ctx.arc(4, 4, 4, 0, 2 * Math.PI, false);
-            ctx.fillStyle = "#fab9b0";
-            ctx.fill();
-          }
-          ctx.restore();
-        }
-      }
+    // blinky.update();
+    // maze.setCharacterDirections(blinky);
+
+    spriteRenderer.draw(pacMan.getDrawableSprite());
+    // spriteRenderer.draw(blinky.getDrawableSprite());
+    // spriteRenderer.draw(inky.getDrawableSprite());
+    // spriteRenderer.draw(pinky.getDrawableSprite());
+    // spriteRenderer.draw(clyde.getDrawableSprite());
+
+    if (maze.hasFood(pacMan.tile)) {
+      maze.eatFood(pacMan.tile);
     }
 
-    ctx.save();
-    {
-      ctx.translate(pacMan.x, pacMan.y);
-      ctx.fillStyle = "#FF0000";
-      ctx.fillRect(0, 0, 1, 1);
-    }
-    ctx.restore();
+    spriteRenderer.drawFood(maze);
   };
 
-  loop();
+  var spriteImage = new Image();
+  spriteImage.addEventListener('load', function () {
+    spriteRenderer = new PAC.Graphics.Sprites(spriteImage, ctx, 680, 248);
+    loop();
+  });
+  spriteImage.src = "img/sprites.png";
 
 }());
