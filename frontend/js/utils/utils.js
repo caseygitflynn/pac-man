@@ -24,3 +24,7 @@ PAC.Utils.gridToCenterPoint = function (x, y) {
     y : y + 4
   };
 };
+
+PAC.Utils.isAtGridOrigin = function (x, y) {
+  return (x % 8 == 4 && y % 8 == 4);
+};

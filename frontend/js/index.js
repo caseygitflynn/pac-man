@@ -26,25 +26,27 @@
     height : 248
   };
 
+  var input = PAC.NONE;
+
   var pacMan = new PAC.Core.Character(12, 12, PAC.SPRITES.PAC_MAN.CLOSED);
 
   window.addEventListener('keydown', function (e) {
     switch (e.keyCode) {
       case 38 :
         e.preventDefault();
-        pacMan.setMovement(PAC.UP);
+        input = PAC.UP;
         break;
       case 39 :
         e.preventDefault();
-        pacMan.setMovement(PAC.RIGHT);
+        input = PAC.RIGHT;
         break;
       case 40 :
         e.preventDefault();
-        pacMan.setMovement(PAC.DOWN);
+        input = PAC.DOWN;
         break;
       case 37 :
         e.preventDefault();
-        pacMan.setMovement(PAC.LEFT);
+        input = PAC.LEFT;
         break;
       default :
         break;
@@ -70,16 +72,6 @@
     } else {
       blinky.sprite = PAC.SPRITES.BLINKY.LEFT;
     }
-
-    if (frame % 16 < 4) {
-      pacMan.sprite = PAC.SPRITES.PAC_MAN.OPEN_LEFT;
-    } else if  (frame % 16 < 8) {
-      pacMan.sprite = PAC.SPRITES.PAC_MAN.HALF_OPEN_LEFT;
-    } else if (frame % 16 < 12) {
-      pacMan.sprite = PAC.SPRITES.PAC_MAN.CLOSED;
-    } else {
-      pacMan.sprite = PAC.SPRITES.PAC_MAN.HALF_OPEN_LEFT;
-    }
     
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -87,17 +79,22 @@
     if (spriteRenderer) {
 
       spriteRenderer.draw(map, false);
-      if (pacMan.directions[pacMan.movement] === -1) {
-        pacMan.setMovement(PAC.NONE);
+      if (PAC.Utils.isAtGridOrigin(pacMan.x, pacMan.y)) {
+        if (pacMan.directions[pacMan.movement] === -1) {
+          pacMan.setMovement(PAC.NONE);
+        } else {
+          pacMan.setMovement(input);
+        }
       }
       pacMan.update();
       maze.setCharacterDirections(pacMan);
       
-      // if (blinky.directions[blinky.movement] === -1) {
-      //   blinky.setMovement(PAC.NONE);
+      // if (PAC.Utils.isAtGridOrigin(blinky.x, blinky.y)) {
+      //   blinky.setMovement(maze.getValidDirection(blinky));
       // }
-      // blinky.move();
-      // blinky.setDirections(maze.grid);
+
+      // blinky.update();
+      // maze.setCharacterDirections(blinky);
 
       spriteRenderer.draw(pacMan.getDrawableSprite());
       // spriteRenderer.draw(blinky.getDrawableSprite());
