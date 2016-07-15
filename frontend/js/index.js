@@ -9,40 +9,41 @@
   var spriteRenderer = null;
 
   var maze = new PAC.Maze();
-
   var input = new PAC.Core.Input();
-  var pacMan = new PAC.Core.Character(12, 12, PAC.SPRITES.PAC_MAN.CLOSED);
-  var blinky = new PAC.Core.Character(112, 92, PAC.SPRITES.BLINKY.LEFT);
-  blinky.setMovement(PAC.LEFT);
 
+  var characters = [];
+  var pacMan = new PAC.Core.Character(12, 12, PAC.SPRITES.PAC_MAN.CLOSED);
+  characters.push(pacMan);
+
+  var blinky = new PAC.Core.Character(112, 92, PAC.SPRITES.BLINKY.LEFT);
   var inky = new PAC.Core.Character(120, 120, PAC.SPRITES.INKY.UP);
   var pinky = new PAC.Core.Character(120, 120, PAC.SPRITES.PINKY.DOWN);
   var clyde = new PAC.Core.Character(120, 120, PAC.SPRITES.CLYDE.UP);
 
   var loop = function () {
     window.requestAnimationFrame(loop);
-
-    frame++;
-
-    if (frame % 16 < 8) {
-      blinky.sprite = PAC.SPRITES.BLINKY.LEFT_ALT;
-    } else {
-      blinky.sprite = PAC.SPRITES.BLINKY.LEFT;
-    }
     
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
     spriteRenderer.draw(PAC.SPRITES.MAP, false);
-    if (PAC.Utils.isAtGridOrigin(pacMan.pixel)) {
-      if (pacMan.directions[pacMan.direction] === -1) {
-        pacMan.setMovement(PAC.NONE);
-      } else {
-        pacMan.setMovement(input.currentInput);
-      }
+
+    for (var steps = 0; steps < 2; steps++) {
+      pacMan.update(steps);
     }
-    pacMan.update();
+
+    if (pacMan.centerOffset.x == 0 && pacMan.centerOffset.y == 0 && pacMan.directions[pacMan.direction] === -1) {
+      pacMan.stopped = true;
+    }
+    
+    pacMan.setMovement(input.currentInput);
     maze.setCharacterDirections(pacMan);
+    pacMan.setCurrentSprite(pacMan.frame);
+
+    pacMan.frame++;
+
+    if (pacMan.frame > 15) {
+      pacMan.frame = 0;
+    }
     
     // if (PAC.Utils.isAtGridOrigin(blinky.x, blinky.y)) {
     //   blinky.setMovement(maze.getValidDirection(blinky));

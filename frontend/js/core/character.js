@@ -10,11 +10,15 @@ PAC.Core.Character = function (x, y, sprite) {
     y : y
   };
   this.tile = PAC.Utils.pixelToTile(this.pixel);
+  this.tilePixel = PAC.Utils.tilePixel(this.pixel);
   this.direction = PAC.NONE;
   this.vector = PAC.Utils.vectorFromDirection(this.direction);
   this.sprite = sprite;
   this.directions = [];
+  this.centerOffset = PAC.Utils.centerOffset(this.tilePixel);
   this.frame = 0;
+  this.steps =[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
+  this.stopped = true;
 };
 
 PAC.Core.Character.prototype.getDrawableSprite = function () {
@@ -32,22 +36,37 @@ PAC.Core.Character.prototype.setMovement = function (direction) {
   if (this.directions[direction] === -1) {
     return;
   }
-
+  
+  this.stopped = false;
   this.direction = direction;
   this.vector = PAC.Utils.vectorFromDirection(this.direction);
 };
 
-PAC.Core.Character.prototype.update = function () {
-  this.frame++;
+PAC.Core.Character.prototype.getNumSteps = function () {
+  return this.steps[this.frame];
+};
 
-  if (this.frame > 16) {
-    this.frame = 0;
-  }
-  
-  this.setCurrentSprite(this.frame);
-  this.pixel.x += this.vector.x;
-  this.pixel.y += this.vector.y;
+PAC.Core.Character.prototype.updatePositionVariables = function () {
   this.tile = PAC.Utils.pixelToTile(this.pixel);
+  this.tilePixel = PAC.Utils.tilePixel(this.pixel);
+  this.centerOffset = PAC.Utils.centerOffset(this.tilePixel);
+};
+
+PAC.Core.Character.prototype.step = function () {
+  if (!this.stopped) {
+    this.pixel.x += this.vector.x;
+    this.pixel.y += this.vector.y;
+  }
+
+  this.updatePositionVariables();
+};
+
+PAC.Core.Character.prototype.update = function (step) {
+  if (step >= this.getNumSteps()) {
+    return;
+  }
+
+  this.step();
 };
 
 PAC.Core.Character.prototype.setCurrentSprite = function (frame) {

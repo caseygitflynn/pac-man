@@ -25,8 +25,37 @@ PAC.Utils.gridToCenterPoint = function (x, y) {
   };
 };
 
-PAC.Utils.isAtGridOrigin = function (pixel) {
-  return (pixel.x % 8 == 4 && pixel.y % 8 == 4);
+PAC.Utils.tilePixel = function(pixel,tilePixel) {
+    var tilePixel = {};
+    tilePixel.x = pixel.x % 8;
+    tilePixel.y = pixel.y % 8;
+    
+    if (tilePixel.x < 0) {
+        tilePixel.x += 8;
+    }
+    if (tilePixel.y < 0) {
+        tilePixel.y += 8;
+    }
+
+    return tilePixel;
+};
+
+PAC.Utils.centerOffset = function (tilePixel) {
+  return {
+    x : 4 - tilePixel.x,
+    y : 4 - tilePixel.y
+  };
+};
+
+PAC.Utils.sign = function (x) {
+  if (x < 0) {
+    return -1;
+  }
+  if (x > 0) {
+    return 1;
+  }
+  
+  return 0;
 };
 
 PAC.Utils.vectorFromDirection = function (direction) {
